@@ -11,8 +11,11 @@ export default function RegisterPage(){
     const navigate = useNavigate();
     function onSubmitRegister(e:FormEvent<HTMLFormElement>){
         e.preventDefault();
-        axios.post("/api/user/register",  {username,  password})
-             .then(() => navigate("/login"))
+        axios.get("/api/user/me") //Warum? -> Durch das Get erhalten wir unseren ersten XSRF Token, damit wir POST request schicken dürfen!
+            .then(() =>
+                axios.post("/api/user/register",  {username,  password})
+                    .then(() => navigate("/login")))
+
     }
 
     return(

@@ -13,9 +13,13 @@ export default function LoginPage(props:LoginPageProps){
     const navigate = useNavigate();
     function onSubmitLogin(e:FormEvent<HTMLFormElement>){
         e.preventDefault();
-        axios.post("/api/user/login", undefined, {auth: {username,  password}})
-            .then(response => props.setUser(response.data))
-            .then(() => navigate("/hello"))
+        axios.get("/api/user/me")//Warum? -> Durch das Get erhalten wir unseren ersten XSRF Token, damit wir POST request schicken dürfen!
+            .then(() =>
+                axios.post("/api/user/login", undefined, {auth: {username,  password}})
+                    .then(response => props.setUser(response.data))
+                    .then(() => navigate("/hello"))
+            )
+
     }
 
     return(
